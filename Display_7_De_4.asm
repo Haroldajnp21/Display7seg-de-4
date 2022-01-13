@@ -96,8 +96,8 @@ EECON1 equ 0X018C
 EECON2 equ 0X018D
 _I2C_SCL_Port=TRISC
 _I2C_SCL_Pin=3
-_I2C_SDA_PORT=TRISC
-_I2C_SDA_PIN=4
+_I2C_SDA_Port=TRISC
+_I2C_SDA_Pin=4
 ; SFR BITS
 IRP=7
 PP_IRP=7
@@ -477,68 +477,68 @@ FOSC_XT equ 0X3FF9
 WDTE_OFF equ 0X3FF7
 WDTE_ON equ 0X3FFF
 #define __16F886 1
-#define XTAL 20
+#define Xtal 20
 #define _Core 14
-#define _MAXRAM 368
+#define _MaxRAM 368
 #define _Ram_End 0X0170
-#define _MAXMEM 8192
+#define _MaxMem 8192
 #define _ADC 11
-#define _ADC_RES 10
+#define _ADC_Res 10
 #define _Eeprom 256
 #define _Pages 4
-#define _BANKS 3
-#define RAM_BANKS 4
+#define _Banks 3
+#define RAM_Banks 4
 #define _USART 1
 #define _USB 0
 #define _Flash 1
 #define _Cwrite_Block 8
 #define Bank0_Start 0X20
-#define BANK0_END 0X7F
+#define Bank0_End 0X7F
 #define Bank1_Start 0XA0
-#define BANK1_END 0XEF
-#define BANK2_START 0X110
-#define BANK2_END 0X16F
-#define BANK3_START 0X190
-#define BANK3_END 0X1EF
-#define _System_Variable_Count 0
+#define Bank1_End 0XEF
+#define Bank2_Start 0X110
+#define Bank2_End 0X16F
+#define Bank3_Start 0X190
+#define Bank3_End 0X1EF
+#define _System_Variable_Count 11
 ram_bank = 0
 Current@Page = 0
 Dest@Page = 0
-#define LCD#TYPE 0
-f@call macro PDEST
-if(PDEST < 1)
-if((PDEST & 2048) == 0)
+#define LCD#Type 0
+f@call macro pDest
+if(pDest < 1)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
 endif
 else
-if(PDEST > $)
-if((PDEST & 2048) == 0)
+if(pDest > $)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
 endif
 else
-if((PDEST & 6144) == 0)
+if((pDest & 6144) == 0)
     clrf PCLATH
 else
-if((PDEST & 2048) == 0)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
@@ -546,42 +546,42 @@ endif
 endif
 endif
 endif
-    call PDEST
+    call pDest
     endm
-f@jump macro PDEST
-if(PDEST < 1)
-if((PDEST & 2048) == 0)
+f@jump macro pDest
+if(pDest < 1)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
 endif
 else
-if(PDEST > $)
-if((PDEST & 2048) == 0)
+if(pDest > $)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
 endif
 else
-if((PDEST & 6144) == 0)
+if((pDest & 6144) == 0)
     clrf PCLATH
 else
-if((PDEST & 2048) == 0)
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
@@ -589,15 +589,15 @@ endif
 endif
 endif
 endif
-    GOTO PDEST
+    goto pDest
     endm
-set@page macro PDEST
-if((PDEST & 2048) == 0)
+set@page macro pDest
+if((pDest & 2048) == 0)
     bcf PCLATH,3
 else
     bsf PCLATH,3
 endif
-if((PDEST & 4096) == 0)
+if((pDest & 4096) == 0)
     bcf PCLATH,4
 else
     bsf PCLATH,4
@@ -666,11 +666,11 @@ if((ram_bank & 2) != 0)
 endif
 ram_bank = 0
     endm
-VARIABLE Current@Page = 0
-VARIABLE PDESTINATION@PAGE = 0
-FIND@PAGE macro PLABELIN
-LOCAL CURRENT_ADDR = $
-LOCAL DEST_ADDR = PLABELIN
+variable Current@Page = 0
+variable PDESTINATION@PAGE = 0
+FIND@PAGE macro pLabelIn
+local CURRENT_ADDR = $
+local DEST_ADDR = pLabelIn
 if((CURRENT_ADDR >= 0X1800) && (CURRENT_ADDR <= 0X2000))
     Current@Page = 3
 endif
@@ -696,460 +696,572 @@ if((DEST_ADDR >= 0) && (DEST_ADDR <= 0X0800))
     PDESTINATION@PAGE = 0
 endif
     endm
-jump macro PLABEL
-    GOTO PLABEL
+jump macro pLabel
+    goto pLabel
     endm
-WREG_BYTE macro PBYTEOUT
-    s@b PBYTEOUT
-    movwf PBYTEOUT
+wreg_byte macro pByteOut
+    s@b pByteOut
+    movwf pByteOut
     r@b
     endm
-WREG_BIT macro pVarOut,PBITOUT
+wreg_bit macro pVarOut,pBitout
     s@b pVarOut
     andlw 1
     btfsc STATUS,2
-    bcf pVarOut,PBITOUT
+    bcf pVarOut,pBitout
     btfss STATUS,2
-    bsf pVarOut,PBITOUT
+    bsf pVarOut,pBitout
     r@b
     endm
-WREG_WORD macro PWORDOUT
-    s@b PWORDOUT
-    movwf PWORDOUT
-    s@b PWORDOUT+1
-    clrf PWORDOUT+1
+wreg_word macro pWordOut
+    s@b pWordOut
+    movwf pWordOut
+    s@b pWordOut+1
+    clrf pWordOut+1
     r@b
     endm
-WREG_DWORD macro PDWORDOUT
-    s@b PDWORDOUT+3
-    clrf PDWORDOUT+3
-    s@b PDWORDOUT+2
-    clrf PDWORDOUT+2
-    s@b PDWORDOUT+1
-    clrf PDWORDOUT+1
-    s@b PDWORDOUT
-    movwf PDWORDOUT
+wreg_dword macro pDwordOut
+    s@b pDwordOut+3
+    clrf pDwordOut+3
+    s@b pDwordOut+2
+    clrf pDwordOut+2
+    s@b pDwordOut+1
+    clrf pDwordOut+1
+    s@b pDwordOut
+    movwf pDwordOut
     r@b
     endm
-byte_wreg macro PBYTEIN
-    s@b PBYTEIN
-    movf PBYTEIN,W
+byte_wreg macro pByteIn
+    s@b pByteIn
+    movf pByteIn,W
     r@b
     endm
-num_SFR macro PNUMIN,pSFROut
+num_SFR macro pNumIn,pSFROut
     s@b pSFROut
-    movlw PNUMIN
+    movlw pNumIn
     movwf pSFROut
     endm
-NUM16_SFR macro PNUMIN,pSFROut
+num16_SFR macro pNumIn,pSFROut
     s@b pSFROut
-    movlw (PNUMIN & 255)
+    movlw (pNumIn & 255)
     movwf pSFROut
     s@b pSFROut + 1
-    movlw ((PNUMIN >> 8) & 255)
+    movlw ((pNumIn >> 8) & 255)
     movwf pSFROut + 1
     r@b
     endm
-num_wreg macro PNUMIN
-    movlw (PNUMIN & 255)
+num_wreg macro pNumIn
+    movlw (pNumIn & 255)
     endm
-num_byte macro PNUMIN,PBYTEOUT
-    s@b PBYTEOUT
-if(PNUMIN == 0)
-    clrf PBYTEOUT
+num_byte macro pNumIn,pByteOut
+    s@b pByteOut
+if(pNumIn == 0)
+    clrf pByteOut
 else
-    movlw (PNUMIN & 255)
-    movwf PBYTEOUT
+    movlw (pNumIn & 255)
+    movwf pByteOut
 endif
     r@b
     endm
-num_bit macro PNUMIN,pVarOut,PBITOUT
+num_bit macro pNumIn,pVarOut,pBitout
     s@b pVarOut
-if((PNUMIN & 1) == 1)
-    bsf pVarOut,PBITOUT
+if((pNumIn & 1) == 1)
+    bsf pVarOut,pBitout
 else
-    bcf pVarOut,PBITOUT
+    bcf pVarOut,pBitout
 endif
     r@b
     endm
-num_word macro PNUMIN,PWORDOUT
-if((PNUMIN & 255) == 0)
-    s@b PWORDOUT
-    clrf PWORDOUT
+num_word macro pNumIn,pWordOut
+if((pNumIn & 255) == 0)
+    s@b pWordOut
+    clrf pWordOut
 else
-    s@b PWORDOUT
-    movlw low (PNUMIN)
-    movwf PWORDOUT
+    s@b pWordOut
+    movlw low (pNumIn)
+    movwf pWordOut
 endif
-if(((PNUMIN >> 8) & 255) == 0)
-    s@b PWORDOUT+1
-    clrf PWORDOUT+1
+if(((pNumIn >> 8) & 255) == 0)
+    s@b pWordOut+1
+    clrf pWordOut+1
 else
-    s@b PWORDOUT+1
-    movlw high (PNUMIN)
-    movwf PWORDOUT+1
-endif
-    r@b
-    endm
-num_dword macro PNUMIN,PDWORDOUT
-if ((PNUMIN >> 24 & 255) == 0)
-    s@b PDWORDOUT+3
-    clrf PDWORDOUT+3
-else
-    s@b PDWORDOUT+3
-    movlw ((PNUMIN >> 24) & 255)
-    movwf PDWORDOUT+3
-endif
-if( ((PNUMIN >> 16) & 255) == 0)
-    s@b PDWORDOUT+2
-    clrf PDWORDOUT+2
-else
-    s@b PDWORDOUT+2
-    movlw ((PNUMIN >> 16) & 255)
-    movwf PDWORDOUT+2
-endif
-if( ((PNUMIN >> 8) & 255) == 0)
-    s@b PDWORDOUT+1
-    clrf PDWORDOUT+1
-else
-    s@b PDWORDOUT+1
-    movlw high (PNUMIN)
-    movwf PDWORDOUT+1
-endif
-if((PNUMIN & 255) == 0)
-    s@b PDWORDOUT
-    clrf PDWORDOUT
-else
-    s@b PDWORDOUT
-    movlw low (PNUMIN)
-    movwf PDWORDOUT
+    s@b pWordOut+1
+    movlw high (pNumIn)
+    movwf pWordOut+1
 endif
     r@b
     endm
-bit_wreg macro pVarin,PBITIN
+num_dword macro pNumIn,pDwordOut
+if ((pNumIn >> 24 & 255) == 0)
+    s@b pDwordOut+3
+    clrf pDwordOut+3
+else
+    s@b pDwordOut+3
+    movlw ((pNumIn >> 24) & 255)
+    movwf pDwordOut+3
+endif
+if( ((pNumIn >> 16) & 255) == 0)
+    s@b pDwordOut+2
+    clrf pDwordOut+2
+else
+    s@b pDwordOut+2
+    movlw ((pNumIn >> 16) & 255)
+    movwf pDwordOut+2
+endif
+if( ((pNumIn >> 8) & 255) == 0)
+    s@b pDwordOut+1
+    clrf pDwordOut+1
+else
+    s@b pDwordOut+1
+    movlw high (pNumIn)
+    movwf pDwordOut+1
+endif
+if((pNumIn & 255) == 0)
+    s@b pDwordOut
+    clrf pDwordOut
+else
+    s@b pDwordOut
+    movlw low (pNumIn)
+    movwf pDwordOut
+endif
+    r@b
+    endm
+bit_wreg macro pVarin,pBitIn
     s@b pVarin
     clrw
-    btfsc pVarin,PBITIN
+    btfsc pVarin,pBitIn
     movlw 1
     r@b
     endm
-bit_byte macro pVarin,PBITIN,PBYTEOUT
+bit_byte macro pVarin,pBitIn,pByteOut
     s@b pVarin
     clrw
-    btfsc pVarin,PBITIN
+    btfsc pVarin,pBitIn
     movlw 1
-    s@b PBYTEOUT
-    movwf PBYTEOUT
+    s@b pByteOut
+    movwf pByteOut
     r@b
     endm
-bit_bit macro pVarin,PBITIN,pVarOut,PBITOUT
+bit_bit macro pVarin,pBitIn,pVarOut,pBitout
 if((pVarin & 65408) == (pVarOut & 65408))
     s@b pVarOut
-    btfsc pVarin,PBITIN
-    bsf pVarOut,PBITOUT
-    btfss pVarin,PBITIN
-    bcf pVarOut,PBITOUT
+    btfsc pVarin,pBitIn
+    bsf pVarOut,pBitout
+    btfss pVarin,pBitIn
+    bcf pVarOut,pBitout
 else
     s@b pVarin
     clrdc
-    btfsc pVarin,PBITIN
+    btfsc pVarin,pBitIn
     setdc
     s@b pVarOut
     skpndc
-    bsf pVarOut,PBITOUT
+    bsf pVarOut,pBitout
     skpdc
-    bcf pVarOut,PBITOUT
+    bcf pVarOut,pBitout
 endif
     endm
-bit_word macro pVarin,PBITIN,PWORDOUT
-    s@b PWORDOUT+1
-    clrf PWORDOUT+1
-    bit_byte pVarin,PBITIN,PWORDOUT
+bit_word macro pVarin,pBitIn,pWordOut
+    s@b pWordOut+1
+    clrf pWordOut+1
+    bit_byte pVarin,pBitIn,pWordOut
     endm
-bit_dword macro pVarin,PBITIN,PDWORDOUT
-    s@b PDWORDOUT+3
-    clrf PDWORDOUT+3
-    s@b PDWORDOUT+2
-    clrf PDWORDOUT+2
-    s@b PDWORDOUT+1
-    clrf PDWORDOUT+1
-    bit_byte pVarin,PBITIN,PDWORDOUT
+bit_dword macro pVarin,pBitIn,pDwordOut
+    s@b pDwordOut+3
+    clrf pDwordOut+3
+    s@b pDwordOut+2
+    clrf pDwordOut+2
+    s@b pDwordOut+1
+    clrf pDwordOut+1
+    bit_byte pVarin,pBitIn,pDwordOut
     endm
-WORD_WREG macro pWordIn
+word_wreg macro pWordIn
     byte_wreg pWordIn
     endm
-WORD_BYTE macro pWordIn,PBYTEOUT
-    byte_byte pWordIn,PBYTEOUT
+word_byte macro pWordIn,pByteOut
+    byte_byte pWordIn,pByteOut
     endm
-WORD_BIT macro pWordIn,pVarOut,PBITOUT
-    byte_bit pWordIn, pVarOut, PBITOUT
+word_bit macro pWordIn,pVarOut,pBitout
+    byte_bit pWordIn, pVarOut, pBitout
     endm
-WORD_WORD macro pWordIn,PWORDOUT
+word_word macro pWordIn,pWordOut
     s@b pWordIn+1
     movf pWordIn+1,W
-    s@b PWORDOUT+1
-    movwf PWORDOUT+1
-    byte_byte pWordIn,PWORDOUT
+    s@b pWordOut+1
+    movwf pWordOut+1
+    byte_byte pWordIn,pWordOut
     endm
-WORD_DWORD macro pWordIn,PDWORDOUT
-    s@b PDWORDOUT+3
-    clrf PDWORDOUT+3
-    s@b PDWORDOUT+2
-    clrf PDWORDOUT+2
-    byte_byte pWordIn+1,PDWORDOUT+1
-    byte_byte pWordIn,PDWORDOUT
+word_dword macro pWordIn,pDwordOut
+    s@b pDwordOut+3
+    clrf pDwordOut+3
+    s@b pDwordOut+2
+    clrf pDwordOut+2
+    byte_byte pWordIn+1,pDwordOut+1
+    byte_byte pWordIn,pDwordOut
     endm
-byte_byte macro PBYTEIN,PBYTEOUT
-    s@b PBYTEIN
-    movf PBYTEIN,W
-    s@b PBYTEOUT
-    movwf PBYTEOUT
+byte_byte macro pByteIn,pByteOut
+    s@b pByteIn
+    movf pByteIn,W
+    s@b pByteOut
+    movwf pByteOut
     r@b
     endm
-byte_word macro PBYTEIN,PWORDOUT
-    s@b PWORDOUT+1
-    clrf PWORDOUT+1
-    byte_byte PBYTEIN,PWORDOUT
+byte_word macro pByteIn,pWordOut
+    s@b pWordOut+1
+    clrf pWordOut+1
+    byte_byte pByteIn,pWordOut
     endm
-byte_dword macro PBYTEIN,PDWORDOUT
-    s@b PDWORDOUT+3
-    clrf PDWORDOUT+3
-    s@b PDWORDOUT+2
-    clrf PDWORDOUT+2
-    s@b PDWORDOUT+1
-    clrf PDWORDOUT+1
-    byte_byte PBYTEIN,PDWORDOUT
+byte_dword macro pByteIn,pDwordOut
+    s@b pDwordOut+3
+    clrf pDwordOut+3
+    s@b pDwordOut+2
+    clrf pDwordOut+2
+    s@b pDwordOut+1
+    clrf pDwordOut+1
+    byte_byte pByteIn,pDwordOut
     endm
-    byte_bit macro PBYTEIN,pVarOut,PBITOUT
-if((PBYTEIN & 65408) == (pVarOut & 65408))
-    s@b PBYTEIN
-    btfsc PBYTEIN,0
-    bsf pVarOut,PBITOUT
-    btfss PBYTEIN,0
-    bcf pVarOut,PBITOUT
+    byte_bit macro pByteIn,pVarOut,pBitout
+if((pByteIn & 65408) == (pVarOut & 65408))
+    s@b pByteIn
+    btfsc pByteIn,0
+    bsf pVarOut,pBitout
+    btfss pByteIn,0
+    bcf pVarOut,pBitout
 else
-    s@b PBYTEIN
-    rrf PBYTEIN,W
+    s@b pByteIn
+    rrf pByteIn,W
     s@b pVarOut
     skpnc
-    bsf pVarOut,PBITOUT
+    bsf pVarOut,pBitout
     skpc
-    bcf pVarOut,PBITOUT
+    bcf pVarOut,pBitout
 endif
     r@b
     endm
-dword_wreg macro PDWORDIN
-    byte_wreg PDWORDIN
+dword_wreg macro pDwordIn
+    byte_wreg pDwordIn
     endm
-dword_byte macro PDWORDIN,PBYTEOUT
-    byte_byte PDWORDIN,PBYTEOUT
+dword_byte macro pDwordIn,pByteOut
+    byte_byte pDwordIn,pByteOut
     endm
-dword_word macro PDWORDIN,PWORDOUT
-    s@b PDWORDIN+1
-    movf PDWORDIN+1,W
-    s@b PWORDOUT+1
-    movwf PWORDOUT+1
-    byte_byte PDWORDIN,PWORDOUT
+dword_word macro pDwordIn,pWordOut
+    s@b pDwordIn+1
+    movf pDwordIn+1,W
+    s@b pWordOut+1
+    movwf pWordOut+1
+    byte_byte pDwordIn,pWordOut
     endm
-dword_dword macro PDWORDIN,PDWORDOUT
-    byte_byte PDWORDIN+3,PDWORDOUT+3
-    byte_byte PDWORDIN+2,PDWORDOUT+2
-    byte_byte PDWORDIN+1,PDWORDOUT+1
-    byte_byte PDWORDIN,PDWORDOUT
+dword_dword macro pDwordIn,pDwordOut
+    byte_byte pDwordIn+3,pDwordOut+3
+    byte_byte pDwordIn+2,pDwordOut+2
+    byte_byte pDwordIn+1,pDwordOut+1
+    byte_byte pDwordIn,pDwordOut
     endm
-dword_bit macro PDWORDIN,pVarOut,PBITOUT
-    byte_bit PDWORDIN,pVarOut,PBITOUT
+dword_bit macro pDwordIn,pVarOut,pBitout
+    byte_bit pDwordIn,pVarOut,pBitout
     endm
-num_float macro PNUMIN,PFLOATOUT
-    num_byte PNUMIN,PFLOATOUT+3
-    num_byte ((PNUMIN >> 8) & 255),PFLOATOUT+2
-    num_byte ((PNUMIN >> 16) & 255),PFLOATOUT+1
-    num_byte ((PNUMIN >> 24) & 255),PFLOATOUT
+num_float macro pNumIn,pFloatOut
+    num_byte pNumIn,pFloatOut+3
+    num_byte ((pNumIn >> 8) & 255),pFloatOut+2
+    num_byte ((pNumIn >> 16) & 255),pFloatOut+1
+    num_byte ((pNumIn >> 24) & 255),pFloatOut
     endm
-WREG_FLOAT macro PFLOATOUT
+wreg_float macro pFloatOut
     PAGESEL _UNS_INT08_TOFL32
     call _UNS_INT08_TOFL32
-    byte_byte PP_AARG,PFLOATOUT
-    byte_byte PP_AARGH,PFLOATOUT+1
-    byte_byte PP_AARGHH,PFLOATOUT+2
-    byte_byte PP_AARGHHH,PFLOATOUT+3
+    byte_byte PP_AARG,pFloatOut
+    byte_byte PP_AARGH,pFloatOut+1
+    byte_byte PP_AARGHH,pFloatOut+2
+    byte_byte PP_AARGHHH,pFloatOut+3
     endm
-bit_float macro pVarin,PBITIN,PFLOATOUT
-    bit_wreg pVarin,PBITIN
+bit_float macro pVarin,pBitIn,pFloatOut
+    bit_wreg pVarin,pBitIn
     PAGESEL _UNS_INT08_TOFL32
     call _UNS_INT08_TOFL32
-    byte_byte PP_AARG,PFLOATOUT
-    byte_byte PP_AARGH,PFLOATOUT+1
-    byte_byte PP_AARGHH,PFLOATOUT+2
-    byte_byte PP_AARGHHH,PFLOATOUT+3
+    byte_byte PP_AARG,pFloatOut
+    byte_byte PP_AARGH,pFloatOut+1
+    byte_byte PP_AARGHH,pFloatOut+2
+    byte_byte PP_AARGHHH,pFloatOut+3
     endm
-byte_float macro PBYTEIN,PFLOATOUT
-    byte_wreg PBYTEIN
+byte_float macro pByteIn,pFloatOut
+    byte_wreg pByteIn
     PAGESEL _UNS_INT08_TOFL32
     call _UNS_INT08_TOFL32
-    byte_byte PP_AARG,PFLOATOUT
-    byte_byte PP_AARGH,PFLOATOUT+1
-    byte_byte PP_AARGHH,PFLOATOUT+2
-    byte_byte PP_AARGHHH,PFLOATOUT+3
+    byte_byte PP_AARG,pFloatOut
+    byte_byte PP_AARGH,pFloatOut+1
+    byte_byte PP_AARGHH,pFloatOut+2
+    byte_byte PP_AARGHHH,pFloatOut+3
     endm
-WORD_FLOAT macro pWordIn,PFLOATOUT
+word_float macro pWordIn,pFloatOut
     byte_byte pWordIn,PP_AARG
     byte_byte pWordIn+1,PP_AARGH
     PAGESEL _UNS_INT16_TOFL32
     call _UNS_INT16_TOFL32
-    byte_byte PP_AARG,PFLOATOUT
-    byte_byte PP_AARGH,PFLOATOUT+1
-    byte_byte PP_AARGHH,PFLOATOUT+2
-    byte_byte PP_AARGHHH,PFLOATOUT+3
+    byte_byte PP_AARG,pFloatOut
+    byte_byte PP_AARGH,pFloatOut+1
+    byte_byte PP_AARGHH,pFloatOut+2
+    byte_byte PP_AARGHHH,pFloatOut+3
     endm
-dword_float macro PDWORDIN,PFLOATOUT
-    byte_byte PDWORDIN,PP_AARG
-    byte_byte PDWORDIN+1,PP_AARGH
-    byte_byte PDWORDIN+2,PP_AARGHH
-    byte_byte PDWORDIN+3,PP_AARGHHH
-    PAGESEL _UNSGN_INT32_TOFL32
-    call _UNSGN_INT32_TOFL32
-    byte_byte PP_AARG,PFLOATOUT
-    byte_byte PP_AARGH,PFLOATOUT+1
-    byte_byte PP_AARGHH,PFLOATOUT+2
-    byte_byte PP_AARGHHH,PFLOATOUT+3
+dword_float macro pDwordIn,pFloatOut
+    byte_byte pDwordIn,PP_AARG
+    byte_byte pDwordIn+1,PP_AARGH
+    byte_byte pDwordIn+2,PP_AARGHH
+    byte_byte pDwordIn+3,PP_AARGHHH
+    PAGESEL _unsgn_int32_tofl32
+    call _unsgn_int32_tofl32
+    byte_byte PP_AARG,pFloatOut
+    byte_byte PP_AARGH,pFloatOut+1
+    byte_byte PP_AARGHH,pFloatOut+2
+    byte_byte PP_AARGHHH,pFloatOut+3
     endm
-float_float macro PFLOATIN,PFLOATOUT
-    byte_byte PFLOATIN,PFLOATOUT
-    byte_byte PFLOATIN+1,PFLOATOUT+1
-    byte_byte PFLOATIN+2,PFLOATOUT+2
-    byte_byte PFLOATIN+3,PFLOATOUT+3
+float_float macro pFloatIn,pFloatOut
+    byte_byte pFloatIn,pFloatOut
+    byte_byte pFloatIn+1,pFloatOut+1
+    byte_byte pFloatIn+2,pFloatOut+2
+    byte_byte pFloatIn+3,pFloatOut+3
     endm
-float_wreg macro PFLOATIN
-    float_float PFLOATIN,PP_AARG
+float_wreg macro pFloatIn
+    float_float pFloatIn,PP_AARG
     PAGESEL _FL32_TO_INT32
     call _FL32_TO_INT32
     endm
-float_bit macro PFLOATIN,pVarOut,PBITOUT
-    float_float PFLOATIN,PP_AARG
+float_bit macro pFloatIn,pVarOut,pBitout
+    float_float pFloatIn,PP_AARG
     PAGESEL _FL32_TO_INT32
     call _FL32_TO_INT32
-    WREG_BIT pVarOut,PBITOUT
+    wreg_bit pVarOut,pBitout
     endm
-float_byte macro PFLOATIN,PBYTEOUT
-    float_float PFLOATIN,PP_AARG
+float_byte macro pFloatIn,pByteOut
+    float_float pFloatIn,PP_AARG
     PAGESEL _FL32_TO_INT32
     call _FL32_TO_INT32
-    WREG_BYTE PBYTEOUT
+    wreg_byte pByteOut
     endm
-float_word macro PFLOATIN,PWORDOUT
-    float_float PFLOATIN,PP_AARG
+float_word macro pFloatIn,pWordOut
+    float_float pFloatIn,PP_AARG
     PAGESEL _FL32_TO_INT32
     call _FL32_TO_INT32
-    byte_byte PP_AARGHHH,PWORDOUT
-    byte_byte PP_AARGHH,PWORDOUT+1
+    byte_byte PP_AARGHHH,pWordOut
+    byte_byte PP_AARGHH,pWordOut+1
     endm
-float_dword macro PFLOATIN,PDWORDOUT
-    float_float PFLOATIN,PP_AARG
+float_dword macro pFloatIn,pDwordOut
+    float_float pFloatIn,PP_AARG
     PAGESEL _FL32_TO_INT32
     call _FL32_TO_INT32
-    byte_byte PP_AARGHHH,PDWORDOUT
-    byte_byte PP_AARGHH,PDWORDOUT+1
-    byte_byte PP_AARGH,PDWORDOUT+2
-    byte_byte PP_AARG,PDWORDOUT+3
+    byte_byte PP_AARGHHH,pDwordOut
+    byte_byte PP_AARGHH,pDwordOut+1
+    byte_byte PP_AARGH,pDwordOut+2
+    byte_byte PP_AARG,pDwordOut+3
     endm
-num_FSR macro PNUMIN
-    num_byte PNUMIN, FSR
-if (((PNUMIN >> 8) & 255) == 1)
+num_FSR macro pNumIn
+    num_byte pNumIn, FSR
+if (((pNumIn >> 8) & 255) == 1)
     bsf STATUS,7
 else
     bcf STATUS,7
 endif
     endm
-label_word macro PLABELIN,PWORDOUT
-    movlw (PLABELIN & 255)
-    s@b PWORDOUT
-    movwf PWORDOUT
-    movlw ((PLABELIN >> 8) & 255)
-    s@b PWORDOUT+1
-    movwf PWORDOUT+1
+label_word macro pLabelIn,pWordOut
+    movlw (pLabelIn & 255)
+    s@b pWordOut
+    movwf pWordOut
+    movlw ((pLabelIn >> 8) & 255)
+    s@b pWordOut+1
+    movwf pWordOut+1
     r@b
     endm
-WREG_SWORD macro PWORDOUT
-    s@b PWORDOUT
-    movwf PWORDOUT
+wreg_sword macro pWordOut
+    s@b pWordOut
+    movwf pWordOut
     movlw 0
-    btfsc PWORDOUT,7
+    btfsc pWordOut,7
     movlw 255
-    s@b PWORDOUT+1
-    movwf PWORDOUT+1
+    s@b pWordOut+1
+    movwf pWordOut+1
     r@b
     endm
-WREG_SDWORD macro PDWORDOUT
-    s@b PDWORDOUT
-    movwf PDWORDOUT
+wreg_sdword macro pDwordOut
+    s@b pDwordOut
+    movwf pDwordOut
     movlw 0
-    btfsc PDWORDOUT,7
+    btfsc pDwordOut,7
     movlw 255
-    s@b PDWORDOUT+1
-    movwf PDWORDOUT+1
-    s@b PDWORDOUT+2
-    movwf PDWORDOUT+2
-    s@b PDWORDOUT+3
-    movwf PDWORDOUT+3
+    s@b pDwordOut+1
+    movwf pDwordOut+1
+    s@b pDwordOut+2
+    movwf pDwordOut+2
+    s@b pDwordOut+3
+    movwf pDwordOut+3
     r@b
     endm
-BYTE_SWORD macro PBYTEIN,PWORDOUT
-    s@b PBYTEIN
-    movf PBYTEIN,W
-    s@b PWORDOUT
-    movwf PWORDOUT
+byte_sword macro pByteIn,pWordOut
+    s@b pByteIn
+    movf pByteIn,W
+    s@b pWordOut
+    movwf pWordOut
     movlw 0
-    btfsc PWORDOUT,7
+    btfsc pWordOut,7
     movlw 255
-    s@b PWORDOUT+1
-    movwf PWORDOUT+1
+    s@b pWordOut+1
+    movwf pWordOut+1
     r@b
     endm
-BYTE_SDWORD macro PBYTEIN,PDWORDOUT
-    s@b PBYTEIN
-    movf PBYTEIN,W
-    s@b PDWORDOUT
-    movwf PDWORDOUT
+byte_sdword macro pByteIn,pDwordOut
+    s@b pByteIn
+    movf pByteIn,W
+    s@b pDwordOut
+    movwf pDwordOut
     movlw 0
-    btfsc PDWORDOUT,7
+    btfsc pDwordOut,7
     movlw 255
-    s@b PDWORDOUT+1
-    movwf PDWORDOUT+1
-    s@b PDWORDOUT+2
-    movwf PDWORDOUT+2
-    s@b PDWORDOUT+3
-    movwf PDWORDOUT+3
+    s@b pDwordOut+1
+    movwf pDwordOut+1
+    s@b pDwordOut+2
+    movwf pDwordOut+2
+    s@b pDwordOut+3
+    movwf pDwordOut+3
     r@b
     endm
-WORD_SDWORD macro pWordIn,PDWORDOUT
+word_sdword macro pWordIn,pDwordOut
     s@b pWordIn
     movf pWordIn,W
-    s@b PDWORDOUT
-    movwf PDWORDOUT
+    s@b pDwordOut
+    movwf pDwordOut
     s@b pWordIn+1
     movf pWordIn+1,W
-    s@b PDWORDOUT+1
-    movwf PDWORDOUT+1
+    s@b pDwordOut+1
+    movwf pDwordOut+1
     movlw 0
-    btfsc PDWORDOUT+1,7
+    btfsc pDwordOut+1,7
     movlw 255
-    s@b PDWORDOUT+2
-    movwf PDWORDOUT+2
-    s@b PDWORDOUT+3
-    movwf PDWORDOUT+3
+    s@b pDwordOut+2
+    movwf pDwordOut+2
+    s@b pDwordOut+3
+    movwf pDwordOut+3
     r@b
     endm
+; COMPILER SYSTEM VARIABLES
+GEN3H = 0X20
+PP0 = 0X21
+PP0H = 0X22
+PP1 = 0X23
+PP1H = 0X24
+PP2 = 0X25
+PP2H = 0X26
+PP3 = 0X27
+PP3H = 0X28
+PP6 = 0X29
+PP6H = 0X2A
+; STANDARD VARIABLES
+CUENTA = 0X2B
+CARGA = 0X2C
+_N = 0X2D
+variable _N#0=0X2D,_N#1=0X2E,_N#2=0X2F,_N#3=0X30
+variable _N#4=0X31,_N#5=0X32,_N#6=0X33,_N#7=0X34
+variable _N#8=0X35,_N#9=0X36
+UNI = 0X37
+DCN = 0X38
+CEN = 0X39
+; ALIAS VARIABLES
+#define D0 PORTA,0
+#define D1 PORTA,1
+#define D2 PORTA,2
+#define PU PORTA,3
+#define PD PORTA,4
+#define PL PORTA,5
+#define PR PORTC,7
 ; CONSTANTS
-#define __XTAL 20
-PROTON#CODE#START
+#define __Xtal 20
+proton#code#start
     org 0
     nop
-    movlw(PROTON#MAIN#START >> 8) & 0XFF
+    movlw(proton#main#start >> 8) & 0XFF
     movwf PCLATH
-    GOTO PROTON#MAIN#START
+    goto proton#main#start
     org 4
-PROTON#MAIN#START
+__delay_ms_
+    clrf PP1H
+__delay_ms_w_
+    movwf PP1
+__delayms_from_regs__
+    movlw 255
+    addwf PP1,F
+    btfss STATUS,0
+    addwf PP1H,F
+    btfss STATUS,0
+    goto __Exit_Library__
+    movlw 3
+    movwf PP0H
+    movlw 230
+    call __delay_us_w_
+    goto __delayms_from_regs__
+__delay_us_
+    clrf PP0H
+__delay_us_w_
+    addlw 252
+    movwf PP0
+    comf PP0H,F
+    btfss STATUS,0
+    goto $ + 7
+    movlw 255
+    nop
+    addwf PP0,F
+    btfsc STATUS,0
+    goto $ - 3
+    addwf PP0,F
+    nop
+    incfsz PP0H,F
+    goto $ - 8
+    return
+__dig_16_
+    addlw 1
+    movwf PP3H
+    movlw 10
+    movwf PP1
+    clrf PP1H
+__DIG_16_LOOP_
+    call __divide_u1616_
+    decfsz PP3H,F
+    goto __DIG_16_LOOP_
+    movf PP2,W
+    return
+__divide_u1616_
+    clrf PP2H
+    clrf PP2
+__divide_int_u1616_
+    movlw 16
+    movwf PP3
+    rlf PP0H,W
+    rlf PP2,F
+    rlf PP2H,F
+    movf PP1,W
+    subwf PP2,F
+    movf PP1H,W
+    btfss STATUS,0
+    incfsz PP1H,W
+    subwf PP2H,F
+    btfsc STATUS,0
+    goto $ + 8
+    movf PP1,W
+    addwf PP2,F
+    movf PP1H,W
+    btfsc STATUS,0
+    incfsz PP1H,W
+    addwf PP2H,F
+    bcf STATUS,0
+    rlf PP0,F
+    rlf PP0H,F
+    decfsz PP3,F
+    goto $ - 21
+    movf PP0,W
+    return
+__Exit_Library__
+i@nt
+    bcf STATUS,PP_IRP
+    bcf STATUS,PP_RP0
+    bcf STATUS,PP_RP1
+    return
+proton#main#start
     bcf STATUS,PP_RP0
     bcf STATUS,PP_RP1
 F1_SOF equ $ ; DISPLAY_7_DE_4.BAS
@@ -1162,11 +1274,350 @@ ram_bank = 3
 ram_bank = 2
     clrf CM1CON0
     clrf CM2CON0
-F1_EOF equ $ ; DISPLAY_7_DE_4.BAS
-_PBLB__2
+F1_000042 equ $ ; IN [DISPLAY_7_DE_4.BAS] TRISA=$38 : TRISB=255: TRISC=128: ANSEL=0: ANSELH=0
+    movlw 0X38
+    bsf STATUS,5
+    bcf STATUS,6
+ram_bank = 1
+    movwf TRISA
+    movlw 0XFF
+    movwf TRISB
+    movlw 0X80
+    movwf TRISC
+    bsf STATUS,6
+ram_bank = 3
+    clrf ANSEL
+    clrf ANSELH
+F1_000043 equ $ ; IN [DISPLAY_7_DE_4.BAS] N[0] =$3F : N[1] =$06 : N[2] =$5B : N[3] =$4F : N[4] =$66
+    movlw 0X3F
+    bcf STATUS,5
     bcf STATUS,6
 ram_bank = 0
-    f@jump _PBLB__2
+    movwf _N#0
+    movlw 0X06
+    movwf _N#1
+    movlw 0X5B
+    movwf _N#2
+    movlw 0X4F
+    movwf _N#3
+    movlw 0X66
+    movwf _N#4
+F1_000044 equ $ ; IN [DISPLAY_7_DE_4.BAS] N[5] =$6D : N[6] =$7D : N[7] =$07 : N[8] =$7F : N[9] =$67
+    movlw 0X6D
+    movwf _N#5
+    movlw 0X7D
+    movwf _N#6
+    movlw 0X07
+    movwf _N#7
+    movlw 0X7F
+    movwf _N#8
+    movlw 0X67
+    movwf _N#9
+F1_000045 equ $ ; IN [DISPLAY_7_DE_4.BAS] CUENTA=0
+    clrf CUENTA
+MAIN
+F1_000048 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB EXTRAE
+    f@call EXTRAE
+ram_bank = 0
+F1_000049 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB ENVIA
+    f@call ENVIA
+ram_bank = 0
+F1_000050 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB UP
+    f@call UP
+ram_bank = 0
+F1_000051 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB DOWN
+    f@call DOWN
+ram_bank = 0
+F1_000052 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB LOAD
+    f@call LOAD
+ram_bank = 0
+F1_000053 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOSUB RST
+    f@call RST
+ram_bank = 0
+F1_000055 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO MAIN
+    f@jump MAIN
+EXTRAE
+F1_000058 equ $ ; IN [DISPLAY_7_DE_4.BAS] UNI=DIG CUENTA,0
+    clrf PP0H
+    movf CUENTA,W
+    movwf PP0
+    movlw 0X00
+    f@call __dig_16_
+ram_bank = 0
+    movwf UNI
+F1_000059 equ $ ; IN [DISPLAY_7_DE_4.BAS] DCN=DIG CUENTA,1
+    clrf PP0H
+    movf CUENTA,W
+    movwf PP0
+    movlw 0X01
+    f@call __dig_16_
+ram_bank = 0
+    movwf DCN
+F1_000060 equ $ ; IN [DISPLAY_7_DE_4.BAS] CEN=DIG CUENTA,2
+    clrf PP0H
+    movf CUENTA,W
+    movwf PP0
+    movlw 0X02
+    f@call __dig_16_
+ram_bank = 0
+    movwf CEN
+ENVIA
+F1_000063 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=0 : D0=0
+    bcf PORTA,2
+    bcf PORTA,1
+    bcf PORTA,0
+F1_000064 equ $ ; IN [DISPLAY_7_DE_4.BAS] PORTC=N[UNI]
+    movf UNI,W
+    addlw _N
+    movwf FSR
+    movf INDF,W
+    movwf PORTC
+F1_000065 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=0 : D0=1
+    bcf PORTA,2
+    bcf PORTA,1
+    bsf PORTA,0
+F1_000066 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 5
+    movlw 0X05
+    f@call __delay_ms_
+ram_bank = 0
+F1_000067 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=0 : D0=0
+    bcf PORTA,2
+    bcf PORTA,1
+    bcf PORTA,0
+F1_000068 equ $ ; IN [DISPLAY_7_DE_4.BAS] PORTC=N[DCN]
+    movf DCN,W
+    addlw _N
+    movwf FSR
+    movf INDF,W
+    movwf PORTC
+F1_000069 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=1 : D0=0
+    bcf PORTA,2
+    bsf PORTA,1
+    bcf PORTA,0
+F1_000070 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 5
+    movlw 0X05
+    f@call __delay_ms_
+ram_bank = 0
+F1_000071 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=0 : D0=0
+    bcf PORTA,2
+    bcf PORTA,1
+    bcf PORTA,0
+F1_000072 equ $ ; IN [DISPLAY_7_DE_4.BAS] PORTC=N[CEN]
+    movf CEN,W
+    addlw _N
+    movwf FSR
+    movf INDF,W
+    movwf PORTC
+F1_000073 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=1 : D1=0 : D0=0
+    bsf PORTA,2
+    bcf PORTA,1
+    bcf PORTA,0
+F1_000074 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 5
+    movlw 0X05
+    f@call __delay_ms_
+ram_bank = 0
+F1_000075 equ $ ; IN [DISPLAY_7_DE_4.BAS] D2=0 : D1=0 : D0=0
+    bcf PORTA,2
+    bcf PORTA,1
+    bcf PORTA,0
+F1_000076 equ $ ; IN [DISPLAY_7_DE_4.BAS] RETURN
+    return
+UP
+F1_000079 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PU=0 THEN
+    set@page _lbl__3
+    btfsc PORTA,3
+    goto _lbl__3
+F1_000080 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000081 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PU=0 THEN
+    set@page _lbl__5
+    btfsc PORTA,3
+    goto _lbl__5
+EU
+F1_000084 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PU=1 THEN
+    set@page _lbl__7
+    btfss PORTA,3
+    goto _lbl__7
+F1_000085 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000086 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF  PU=1 THEN
+    set@page _lbl__9
+    btfss PORTA,3
+    goto _lbl__9
+F1_000087 equ $ ; IN [DISPLAY_7_DE_4.BAS] CUENTA=CUENTA+1
+    incf CUENTA,F
+    f@jump _lbl__10
+_lbl__9
+F1_000088 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000089 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO EU
+    f@jump EU
+F1_000090 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__10
+    f@jump _lbl__11
+_lbl__7
+F1_000091 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000093 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO EU
+    f@jump EU
+F1_000094 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__11
+F1_000095 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__5
+F1_000096 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__3
+F1_000097 equ $ ; IN [DISPLAY_7_DE_4.BAS] RETURN
+    return
+DOWN
+F1_000100 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PD=0 THEN
+    set@page _lbl__13
+    btfsc PORTA,4
+    goto _lbl__13
+F1_000101 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000102 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PD=0 THEN
+    set@page _lbl__15
+    btfsc PORTA,4
+    goto _lbl__15
+ED
+F1_000105 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PD=1 THEN
+    set@page _lbl__17
+    btfss PORTA,4
+    goto _lbl__17
+F1_000106 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000107 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PD=1 THEN
+    set@page _lbl__19
+    btfss PORTA,4
+    goto _lbl__19
+F1_000108 equ $ ; IN [DISPLAY_7_DE_4.BAS] CUENTA=CUENTA - 1
+    decf CUENTA,F
+    f@jump _lbl__20
+_lbl__19
+F1_000109 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000110 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO ED
+    f@jump ED
+F1_000111 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__20
+    f@jump _lbl__21
+_lbl__17
+F1_000112 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000113 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO ED
+    f@jump ED
+F1_000114 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__21
+F1_000115 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__15
+F1_000116 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__13
+F1_000117 equ $ ; IN [DISPLAY_7_DE_4.BAS] RETURN
+    return
+LOAD
+F1_000121 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PL=0 THEN
+    set@page _lbl__23
+    btfsc PORTA,5
+    goto _lbl__23
+F1_000122 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000123 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PL=0 THEN
+    set@page _lbl__25
+    btfsc PORTA,5
+    goto _lbl__25
+EL
+F1_000126 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PL=1 THEN
+    set@page _lbl__27
+    btfss PORTA,5
+    goto _lbl__27
+F1_000127 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000128 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PL=1 THEN
+    set@page _lbl__29
+    btfss PORTA,5
+    goto _lbl__29
+F1_000129 equ $ ; IN [DISPLAY_7_DE_4.BAS] CARGA=PORTB
+    movf PORTB,W
+    movwf CARGA
+F1_000130 equ $ ; IN [DISPLAY_7_DE_4.BAS] CUENTA=CUENTA
+    f@jump _lbl__30
+_lbl__29
+F1_000131 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000132 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO EL
+    f@jump EL
+F1_000133 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__30
+    f@jump _lbl__31
+_lbl__27
+F1_000134 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000135 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO EL
+    f@jump EL
+F1_000136 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__31
+F1_000137 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__25
+F1_000138 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__23
+F1_000139 equ $ ; IN [DISPLAY_7_DE_4.BAS] RETURN
+    return
+RST
+F1_000143 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PR=0 THEN
+    set@page _lbl__33
+    btfsc PORTC,7
+    goto _lbl__33
+F1_000144 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000145 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PR=0 THEN
+    set@page _lbl__35
+    btfsc PORTC,7
+    goto _lbl__35
+ER
+F1_000148 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PR=1 THEN
+    set@page _lbl__37
+    btfss PORTC,7
+    goto _lbl__37
+F1_000149 equ $ ; IN [DISPLAY_7_DE_4.BAS] DELAYMS 20
+    movlw 0X14
+    f@call __delay_ms_
+ram_bank = 0
+F1_000150 equ $ ; IN [DISPLAY_7_DE_4.BAS] IF PR=1 THEN
+    set@page _lbl__39
+    btfss PORTC,7
+    goto _lbl__39
+F1_000151 equ $ ; IN [DISPLAY_7_DE_4.BAS] CUENTA=CUENTA
+    f@jump _lbl__40
+_lbl__39
+F1_000152 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000153 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO ER
+    f@jump ER
+F1_000154 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__40
+    f@jump _lbl__41
+_lbl__37
+F1_000155 equ $ ; IN [DISPLAY_7_DE_4.BAS] ELSE
+F1_000156 equ $ ; IN [DISPLAY_7_DE_4.BAS] GOTO ER
+    f@jump ER
+F1_000157 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__41
+F1_000158 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__35
+F1_000159 equ $ ; IN [DISPLAY_7_DE_4.BAS] ENDIF
+_lbl__33
+F1_000160 equ $ ; IN [DISPLAY_7_DE_4.BAS] RETURN
+    return
+F1_EOF equ $ ; DISPLAY_7_DE_4.BAS
+_PBLB__42
+    f@jump _PBLB__42
 __EOF
 __config _config1, FOSC_EXTRC_CLKOUT&WDTE_ON&PWRTE_OFF&MCLRE_ON&CP_OFF&CPD_OFF&BOREN_ON&IESO_ON&FCMEN_ON&LVP_ON&DEBUG_OFF
 __config _config2, BOR4V_BOR40V&WRT_OFF

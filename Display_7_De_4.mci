@@ -1,20 +1,20 @@
 [Project]
 Filename=C:\Users\haroldde\Documents\PIC_basic_2021\Display 7 seg de 4\Display_7_De_4.bas
 [Environment]
-CaretX=4
-CaretY=91
-Topline=63
+CaretX=14
+CaretY=45
+Topline=29
 [Version]
 Enable=1
 Rollover=255
 Major=0
 Minor=0
 Release=0
-Build=1
+Build=4
 [Results]
 Visible=1
 Height=117
 View=2
 [Status]
-Message=Success : 16 program words used, 0 variable bytes used
+Message=Success : 343 program words used, 26 variable bytes used
 Image=0

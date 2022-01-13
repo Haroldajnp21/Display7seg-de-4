@@ -27,7 +27,7 @@ Symbol D2=PORTA.2
 Symbol PU=PORTA.3
 Symbol PD=PORTA.4 
 Symbol PL=PORTA.5
-Symbol PR=PORTA.7
+Symbol PR=PORTC.7
 
 ;-------------------------------------------------------------------------------
 Dim CUENTA As Byte 
@@ -74,7 +74,7 @@ ENVIA:
   DelayMS 5   
  D2=0 : D1=0 : D0=0     
   Return
-
+;------------------------------------------------------------
   UP:
   If PU=0 Then 
   DelayMS 20
@@ -89,6 +89,77 @@ ENVIA:
              GoTo EU 
          EndIf 
      Else 
- 
-    
+     Else
+         GoTo EU
+     EndIf 
+  EndIf 
+EndIf 
+Return
+;----------------------------------------------------------- 
+DOWN:   
+   If PD=0 Then 
+    DelayMS 20 
+     If PD=0 Then 
+;-----------------------------------------------------------      
+ED:
+       If PD=1 Then 
+       DelayMS 20 
+       If PD=1 Then 
+         CUENTA=CUENTA - 1
+         Else 
+          GoTo ED 
+         EndIf 
+       Else 
+        GoTo ED
+      EndIf 
+    EndIf 
+  EndIf 
+Return 
+  
+;-----------------------------------------------------------     
+LOAD:
+    If PL=0 Then 
+     DelayMS 20 
+     If PL=0 Then 
+;----------------------------------------------------------- 
+EL:
+   If PL=1 Then 
+       DelayMS 20 
+       If PL=1 Then 
+         CARGA=PORTB
+         CUENTA=CUENTA
+         Else 
+          GoTo EL
+         EndIf 
+       Else 
+        GoTo EL
+      EndIf 
+    EndIf 
+  EndIf 
+Return 
+  
+;-----------------------------------------------------------     
+RST:
+    If PR=0 Then 
+     DelayMS 20 
+     If PR=0 Then 
+;----------------------------------------------------------- 
+ER:
+   If PR=1 Then 
+       DelayMS 20 
+       If PR=1 Then 
+         CUENTA=CUENTA
+         Else 
+          GoTo ER
+         EndIf 
+       Else 
+        GoTo ER
+      EndIf 
+    EndIf 
+  EndIf 
+Return 
+
+
+
+
  
