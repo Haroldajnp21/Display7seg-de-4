@@ -31,17 +31,33 @@ Symbol D6=PORTA.6
 Symbol D7=PORTA.7
 
 ;-------------------------------------------------------------------------------
-Dim cuenta As Byte 
-Dim carga As Byte
+Dim CUENTA As Byte 
+Dim CARGA As Byte
 Dim N[10] As Byte 
 Dim UNI As Byte 
 Dim DCN As Byte 
 Dim CEN As Byte 
 
 ;-------------------------------------------------------------------------------
+TRISA=$38 : TRISB=255: TRISC=128: ANSEL=0: ANSELH=0
+N[0]=$3F : N[1]=$06 : N[2]=$5B : N[3]=$4F : N[4]=$66
+N[5]=$6D : N[6]=$7D : N[7]=$07 : N[8]=$7F : N[9]=$67   
+CUENTA=0
 
+MAIN:                                 ;BUCLE 
+    GoSub EXTRAE                
+    GoSub ENVIA 
+    GoSub UP 
+    GoSub DOWN
+    GoSub LOAD
+    GoSub RST 
+    
+GoTo MAIN 
 
-
-
-
+    
+    
+    
+    
+    
+    
  
