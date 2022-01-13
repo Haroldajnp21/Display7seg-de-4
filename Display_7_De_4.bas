@@ -1,11 +1,11 @@
 '****************************************************************
-'*  Name    : UNTITLED.BAS                                      *
+'*  Name    : 7SEG DE 4.BAS                                     *
 '*  Author  : [select VIEW...EDITOR OPTIONS]                    *
 '*  Notice  : Copyright (c) 2022 [select VIEW...EDITOR OPTIONS] *
 '*          : All Rights Reserved                               *
 '*  Date    : 12/01/2022                                        *
 '*  Version : 1.0                                               *
-'*  Notes   :                                                   *
+'*  Notes   : HECHO EN PROTON IDE                               *
 '*          :                                                   *
 '****************************************************************
 ;-------------------------------------------------------------------------------
@@ -19,16 +19,15 @@ Config2 BOR4V_BOR40V, WRT_OFF
 
 ;**** End of Fuse Configurator Settings ****
 ;-------------------------------------------------------------------------------
- Declare Xtal = 20
+ Declare Xtal = 20   ;DECLARAMOS EL CRISTAL EN 20MHZ
 ;-------------------------------------------------------------------------------
 Symbol D0=PORTA.0
 Symbol D1=PORTA.1 
 Symbol D2=PORTA.2
-Symbol D3=PORTA.3
-Symbol D4=PORTA.4 
-Symbol D5=PORTA.5
-Symbol D6=PORTA.6
-Symbol D7=PORTA.7
+Symbol PU=PORTA.3
+Symbol PD=PORTA.4 
+Symbol PL=PORTA.5
+Symbol PR=PORTA.7
 
 ;-------------------------------------------------------------------------------
 Dim CUENTA As Byte 
@@ -39,12 +38,13 @@ Dim DCN As Byte
 Dim CEN As Byte 
 
 ;-------------------------------------------------------------------------------
+;--CATODO COMUN-------------------------------------------------------------------
 TRISA=$38 : TRISB=255: TRISC=128: ANSEL=0: ANSELH=0
 N[0]=$3F : N[1]=$06 : N[2]=$5B : N[3]=$4F : N[4]=$66
 N[5]=$6D : N[6]=$7D : N[7]=$07 : N[8]=$7F : N[9]=$67   
 CUENTA=0
-
-MAIN:                                 ;BUCLE 
+;------------------------------------------------------------
+MAIN:                                 ;<----BUCLE 
     GoSub EXTRAE                
     GoSub ENVIA 
     GoSub UP 
@@ -53,11 +53,42 @@ MAIN:                                 ;BUCLE
     GoSub RST 
     
 GoTo MAIN 
+;-------------------------------------------------------------
+EXTRAE:
+  UNI=Dig CUENTA,0
+  DCN=Dig CUENTA,1
+  CEN=Dig CUENTA,2
+;--------------------------------------------------------------
+ENVIA:
+ D2=0 : D1=0 : D0=0  
+   PORTC=N[UNI]
+ D2=0 : D1=0 : D0=1    
+  DelayMS 5
+ D2=0 : D1=0 : D0=0  
+   PORTC=N[DCN]
+ D2=0 : D1=1 : D0=0    
+  DelayMS 5   
+ D2=0 : D1=0 : D0=0  
+   PORTC=N[CEN]
+ D2=1 : D1=0 : D0=0    
+  DelayMS 5   
+ D2=0 : D1=0 : D0=0     
+  Return
 
-    
-    
-    
-    
-    
+  UP:
+  If PU=0 Then 
+  DelayMS 20
+   If PU=0 Then
+;------------------------------------------------------------
+  EU:
+     If PU=1 Then
+         DelayMS 20
+         If  PU=1 Then 
+          CUENTA=CUENTA+1
+          Else 
+             GoTo EU 
+         EndIf 
+     Else 
+ 
     
  
